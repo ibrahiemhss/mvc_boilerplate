@@ -1,0 +1,87 @@
+// @dart=2.9
+import '../helpers/custom_trace.dart';
+import '../models/media.dart';
+import 'user.dart';
+
+class MainData {
+  String id;
+  String name;
+  Media image;
+  String rate;
+  String address;
+  String description;
+  String phone;
+  String mobile;
+  String information;
+  double adminCommission;
+  double defaultTax;
+  String latitude;
+  String longitude;
+  bool closed;
+  double distance;
+  List<User> users;
+
+  MainData();
+
+  MainData.fromJSON(Map<String, dynamic> jsonMap) {
+    try {
+      id = jsonMap['id'].toString();
+      name = jsonMap['name'];
+      image = jsonMap['media'] != null && (jsonMap['media'] as List).length > 0
+          ? Media.fromJSON(jsonMap['media'][0])
+          : new Media();
+      rate = jsonMap['rate'] ?? '0';
+      adminCommission = jsonMap['admin_commission'] != null
+          ? jsonMap['admin_commission'].toDouble()
+          : 0.0;
+      address = jsonMap['address'];
+      description = jsonMap['description'];
+      phone = jsonMap['phone'];
+      mobile = jsonMap['mobile'];
+      defaultTax = jsonMap['default_tax'] != null
+          ? jsonMap['default_tax'].toDouble()
+          : 0.0;
+      information = jsonMap['information'];
+      latitude = jsonMap['latitude'];
+      longitude = jsonMap['longitude'];
+      closed = jsonMap['closed'] ?? false;
+      distance = jsonMap['distance'] != null
+          ? double.parse(jsonMap['distance'].toString())
+          : 0.0;
+      users = jsonMap['users'] != null && (jsonMap['users'] as List).length > 0
+          ? List.from(jsonMap['users'])
+              .map((element) => User.fromJSON(element))
+              .toSet()
+              .toList()
+          : [];
+    } catch (e) {
+      id = '';
+      name = '';
+      image = new Media();
+      rate = '0';
+      adminCommission = 0.0;
+      address = '';
+      description = '';
+      phone = '';
+      mobile = '';
+      defaultTax = 0.0;
+      information = '';
+      latitude = '0';
+      longitude = '0';
+      closed = false;
+      distance = 0.0;
+      users = [];
+      print(CustomTrace(StackTrace.current, message: e));
+    }
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'latitude': latitude,
+      'longitude': longitude,
+      'distance': distance,
+    };
+  }
+}
